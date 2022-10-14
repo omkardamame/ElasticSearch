@@ -1,0 +1,76 @@
+---
+- name: Playbook for remote deployment of Elastic Agent
+  hosts: all
+  gather_facts: true
+  tasks:
+
+  - name: Installing required packages
+    yum:
+      name:
+        - wget
+        - vim
+        - curl
+        - net-tools
+      state: present
+  
+  - shell: sudo rm -rf /tmp/* && sudo yum remove elastic-agent -y
+
+  - name: Downloading Elastic-Agent
+    uri:
+      url: https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-7.17.6-x86_64.rpm
+      dest: /tmp/elastic-agent-7.17.6-x86_64.rpm
+      mode: '0755'
+
+  - name: Downloading elastic-agent.yml
+    uri:
+      url: https://raw.githubusercontent.com/omkardamame/ElasticSearch/main/elastic-agent.yml
+      dest: /tmp/elastic-agent.yml
+      mode: '0755'
+
+  - name: Installing Elastic-Agent
+    shell: rpm -vi /tmp/elastic-agent-7.17.6-x86_64.rpm
+    register: command_output
+
+  - debug:
+      msg: "{{ command_output.stdout }}"
+
+  - name: Copying new elastic-agent.yml
+    copy:
+      src: /tmp/elastic-agent.yml
+      dest: /etc/elastic-agent/elastic-agent.yml
+      owner: root
+      group: root
+      mode: '0644'
+      remote_src: true
+
+  - name: Configuring Elastic-Agent
+    command: sudo elastic-agent enroll -f --url=http://192.168.1.251:8220 --enrollment-token=Q2FUYnlvTUJsbjFaS3plZ2dYWUU6M1dmN3NsSDRSTDJwc1l0MFF3MWpHdw== --insecure
+    register: command_output
+
+  - name: Checking log of configuration of Elastic-Agent
+    debug:
+      msg: "{{ command_output.stdout }}"
+
+  - name: Reloading daemon
+    command: sudo /bin/systemctl daemon-reload
+
+  - name: Enabling and starting Elastic-Agent
+    command: sudo /bin/systemctl enable --now elastic-agent
+    register: command_output
+
+  - debug:
+      msg: "{{ command_output.stdout }}"
+
+  - name: Restarting Elastic-Agent to avoid start failures
+    shell: sudo systemctl restart elastic-agent.service
+
+  - name: Sleep for 30 seconds and continue with play
+    wait_for:
+      timeout: 30
+
+  - service_facts:
+
+  - name: Checking if service is running
+    debug:
+      var: ansible_facts.services["elastic-agent.service"]
+    
