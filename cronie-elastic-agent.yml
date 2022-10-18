@@ -13,4 +13,4 @@
       cron:
         name: "job-reboot-elastic-agent"
         special_time: daily
-        job: "sudo systemctl restart elastic-agent"
+        job: "sudo systemctl restart elastic-agent" 
