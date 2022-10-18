@@ -1,0 +1,16 @@
+---
+  - name: Misc config for Elastic-Agents
+    hosts: ELK_CRON
+    gather_facts: true
+    tasks:
+
+    - name: Installing cronie
+      yum:
+        name: cronie
+        state: present
+
+    - name: Executing cron job for Elastic-Agent
+      cron:
+        name: "job-reboot-elastic-agent"
+        special_time: daily
+        job: "sudo systemctl restart elastic-agent"
