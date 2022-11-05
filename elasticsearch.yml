@@ -6,6 +6,6 @@
     - node
     - node_stats
   period: 05s
-  hosts: ["https://192.168.1.220:9200"]
+  hosts: ["https://192.168.1.221:9200"]
   username: "elastic"
   password: "elastic"
