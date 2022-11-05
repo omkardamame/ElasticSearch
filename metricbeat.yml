@@ -62,7 +62,8 @@ setup.kibana:
   host: "192.168.1.220:5601"
   username: "elastic"
   password: "elastic"
-  
+  protocol: "https"
+  ssl.verification_mode: "none"  
   # Kibana Host
   # Scheme and port can be left out and will be set to the default (http and 5601)
   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
@@ -105,7 +106,7 @@ output.elasticsearch:
   password: "elastic"
   # Protocol - either `http` (default) or `https`.
   protocol: "https"
-
+  ssl.certificate_authorities: ["/etc/elasticsearch/certs/http_ca.crt"]
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
   #username: "elastic"
@@ -154,12 +155,12 @@ processors:
 # reporting is disabled by default.
 
 # Set to true to enable the monitoring reporter.
-#monitoring.enabled: false
+monitoring.enabled: true
 
 # Sets the UUID of the Elasticsearch cluster under which monitoring data for this
 # Metricbeat instance will appear in the Stack Monitoring UI. If output.elasticsearch
 # is enabled, the UUID is derived from the Elasticsearch cluster referenced by output.elasticsearch.
-#monitoring.cluster_uuid:
+monitoring.cluster_uuid: 'ic0Eb2zbTC-emPsa6gv_Ww'
 
 # Uncomment to send the metrics to Elasticsearch. Most settings from the
 # Elasticsearch output are accepted here as well.
