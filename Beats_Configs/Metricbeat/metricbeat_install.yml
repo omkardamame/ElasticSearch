@@ -1,0 +1,92 @@
+---
+- name: Installation of METRICBEAT 
+  hosts: ELK
+  vars:
+        - dest:
+                - /etc/metricbeat/modules.d/
+                
+        - src: 
+                - /root/beats 
+
+        - file_urls:
+                - https://raw.githubusercontent.com/methos28/ElasticSearch/main/elasticsearch-xpack.yml
+                - https://raw.githubusercontent.com/methos28/ElasticSearch/main/metricbeat.yml
+                - https://raw.githubusercontent.com/methos28/ElasticSearch/main/elasticsearch.yml
+                - https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.17.6-x86_64.rpm
+
+        - copy: /root/beats/metricbeat.yml
+
+        - copy_m: 
+                - /root/beats/elasticsearch.yml
+                - /root/beats/elasticsearch-xpack.yml  
+
+
+  tasks:
+        - name: Cleaning Previous Packages if any
+          yum:
+                name: metricbeat
+                state: removed
+          ignore_errors: yes
+       
+        - name: Cleaning for prep
+          shell: rm -rf /root/beats/*
+          ignore_errors: yes
+
+        - name: Downloading Required Package and files for Metricbeat
+          get_url:
+                url: "{{ file_url }}"
+                dest: /root/beats
+
+        - name: Installing MetricBeat 7.17.6 Package
+          yum:
+                name: /root/beats/metricbeat-7.17.6-x86_64.rpm
+                state: present
+          
+        - name: Enabling Base Metricbeat modules
+          shell: metricbeat modules enable elasticsearch elasticsearch-xpack
+          register: setup
+
+        - name: OUTPUT
+          debug:
+                msg: "{{ setup.stdout }}"
+          
+        - name: Copying Metricbeat Config
+          copy:
+                src: "{{ copy }}"
+                dest: /etc/metricbeat/
+                owner: root
+                group: root
+                mode: '0644'
+                remote_src: true
+
+        - name: Copying Modules Configs
+          copy:
+                src: "{{ copy_m }}"
+                dest: /etc/metricbeat/modules.d/
+                owner: root
+                group: root
+                mode: '0644'
+                remote_src: true
+
+        - name: Enabling and Starting the Service
+          systemd:
+                state: restarted 
+                daemon-reload: yes
+                name: metricbeat
+                enabled: yes
+        
+        - service_facts:
+
+        - name: Checking Service Status
+          debug:
+                var: ansible_facts.services["metricbeat.service"]        
+
+        - name: RESTARTING AGENT TO AVOID FAILURE
+          systemd:
+                name: elastic-agent
+                state: restarted
+        
+        - name: Checking Elastic Agent Status
+          debug:
+                var: ansible_facts.services["elastic-agent.service"] 
+                 

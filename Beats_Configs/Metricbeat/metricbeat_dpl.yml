@@ -1,0 +1,104 @@
+---
+- name: Installing Metricbeat on Elasticsearch servers
+  hosts: 192.168.1.221
+  tasks:
+    - name: "Clearing residual Packages if any Before Installation"
+      yum:
+        name: metricbeat
+        state: absent
+    
+    - name: Cleaning up Residual Files if any
+      file:
+        path: ~/kibana-stuff
+        state: absent  
+
+    - name: Making Temp Directory for packages 
+      file:
+        path: ~/kibana-stuff
+        state: directory
+        mode: '0777'
+
+    - name: Downloading Metricbeat
+      get_url:
+        url: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-8.5.0-x86_64.rpm
+        dest: ~/kibana-stuff
+        mode: '0777'
+      register: dwl 
+
+    - name: Getting the output
+      debug:
+        var: dwl
+
+    - name: Installing Metricbeat
+      shell: cd ~/kibana-stuff && rpm -iv metricbeat-8.5.0-x86_64.rpm
+      register: install_log
+
+    - name: Status of Installation
+      debug:
+        var: install_log
+
+    - name: Checking if its actually installed
+      yum:
+        list: metricbeat
+      register: chk 
+
+    - name: Installation Failed, Check System Logs for Issue
+      fail:
+        msg: 'Failed Because the package was not found'
+      when: chk.failed == true
+    
+    - name: Downloading the metricbeat Configs
+      get_url:
+        url: "{{ item }}"
+        dest: ~/kibana-stuff/
+        mode: '0755'
+      loop: 
+        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/metricbeat.yml
+        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/elasticsearch.yml
+      register: dwl_cnf
+
+    - name: Download Status
+      debug:
+        var: dwl_cnf
+
+    - name: 
+      copy:
+        src: ~/kibana-stuff/metricbeat.yml
+        dest: /etc/metricbeat/
+        mode: '0755'
+        remote_src: true
+
+    - name: Enabling Elasticsearch Modules
+      shell: metricbeat modules enable elasticsearch elasticsearch-xpack
+      register: sts 
+
+    - name: Status of Above task
+      debug:
+        var: sts
+    
+    - name: Copying the Elasticsearch Module Config
+      copy:
+        src: ~/kibana-stuff/elasticsearch.yml
+        dest: /etc/metricbeat/modules.d/
+        mode: '0755'
+        remote_src: true
+
+
+    - name: Enabling and Starting the Service
+      systemd:
+        state: restarted 
+        daemon-reload: yes
+        name: metricbeat
+        enabled: yes 
+      register: sysctl
+
+    - name: Reload Status
+      debug:
+        var: sysctl 
+
+
+          
+      
+
+
+           
