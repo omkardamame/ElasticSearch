@@ -1,28 +1,28 @@
 ---
-- name: Installing Metricbeat on Elasticsearch servers
+- name: Installing Filebeat on Elasticsearch servers
   hosts: elk
   tasks:
     - name: "Clearing residual Packages if any Before Installation"
       yum:
-        name: metricbeat
+        name: filebeat
         state: absent
     
     - name: Cleaning up Residual Files if any
       file:
-        path: ~/kibana-stuff/metricbeat
+        path: ~/kibana-stuff/filebeat
         state: absent  
-        recurse: yes
-        
+
     - name: Making Temp Directory for packages 
       file:
-        path: ~/kibana-stuff/metricbeat
+        path: ~/kibana-stuff/filebeat
         state: directory
         mode: '0755'
+        recurse: yes
 
-    - name: Downloading Metricbeat
+    - name: Downloading Filebeat
       get_url:
-        url: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-8.5.0-x86_64.rpm
-        dest: ~/kibana-stuff/metricbeat
+        url: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.7-x86_64.rpm
+        dest: ~/kibana-stuff/filebeat
         mode: '0755'
       register: dwl 
 
@@ -30,8 +30,8 @@
       debug:
         var: dwl
 
-    - name: Installing Metricbeat
-      shell: cd ~/kibana-stuff/metricbeat && rpm -iv metricbeat-8.5.0-x86_64.rpm
+    - name: Installing Filebeat
+      shell: cd ~/kibana-stuff/filebeat && rpm -iv filebeat-7.17.7-x86_64.rpm
       register: install_log
 
     - name: Status of Installation
@@ -40,7 +40,7 @@
 
     - name: Checking if its actually installed
       yum:
-        list: metricbeat
+        list: filebeat
       register: chk 
 
     - name: Installation Failed, Check System Logs for Issue
@@ -48,14 +48,15 @@
         msg: 'Failed Because the package was not found'
       when: chk.failed == true
     
-    - name: Downloading the metricbeat Configs
+    - name: Downloading the filebeat Configs
       get_url:
         url: "{{ item }}"
-        dest: ~/kibana-stuff/metricbeat/
+        dest: ~/kibana-stuff/filebeat
         mode: '0755'
       loop: 
-        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/metricbeat.yml
-        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/elasticsearch.yml
+        https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/elasticsearch.yml
+        https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/filebeat.yml
+        https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/system.yml
       register: dwl_cnf
 
     - name: Download Status
@@ -64,13 +65,13 @@
 
     - name: 
       copy:
-        src: ~/kibana-stuff/metricbeat/metricbeat.yml
-        dest: /etc/metricbeat/
+        src: ~/kibana-stuff/filebeat/filebeat.yml
+        dest: /etc/filebeat/
         mode: '0755'
         remote_src: true
 
     - name: Enabling Elasticsearch Modules
-      shell: metricbeat modules enable elasticsearch 
+      shell: filebeat modules enable elasticsearch system
       register: sts 
 
     - name: Status of Above task
@@ -79,17 +80,20 @@
     
     - name: Copying the Elasticsearch Module Config
       copy:
-        src: ~/kibana-stuff/metricbeat/elasticsearch.yml
-        dest: /etc/metricbeat/modules.d/
+        src: ~/kibana-stuff/filebeat/{{ item }}
+        dest: /etc/filebeat/modules.d/
         mode: '0755'
         remote_src: true
-
+      loop:
+        - elasticsearch.yml
+        - system.yml
+    
 
     - name: Enabling and Starting the Service
       systemd:
         state: restarted 
         daemon-reload: yes
-        name: metricbeat
+        name: filebeat
         enabled: yes 
       register: sysctl
 
