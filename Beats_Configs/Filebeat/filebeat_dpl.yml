@@ -54,9 +54,9 @@
         dest: ~/kibana-stuff/filebeat
         mode: '0755'
       loop: 
-        https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/elasticsearch.yml
-        https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/filebeat.yml
-        https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/system.yml
+        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/elasticsearch.yml
+        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/filebeat.yml
+        - https://raw.githubusercontent.com/methos28/ElasticSearch/main/Beats_Configs/Filebeat/system.yml
       register: dwl_cnf
 
     - name: Download Status
