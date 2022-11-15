@@ -57,7 +57,7 @@ output.elasticsearch:
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
   username: "yourusername"
-  password: "elastic"
+  password: "yourpassword"
   # Protocol - either `http` (default) or `https`.
   protocol: "https" #you can comment this if its in http protocol
   ssl.certificate_authorities: ["/etc/elasticsearch/certs/http_ca.crt"]
