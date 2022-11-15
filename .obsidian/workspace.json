@@ -1,0 +1,172 @@
+{
+  "main": {
+    "id": "fafaba7fa4bfaa52",
+    "type": "split",
+    "children": [
+      {
+        "id": "dc862fa0c13f6130",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3889b96d19530fc0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ElasticSearch 7.17.6 with Kibana Setup on RHEL 8.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "392ad2dcbce4736e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Beats_Configs/Metricbeat/MetricBeat_Installtion.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "9e2763ec25b4a4ab",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Beats_Configs/Metricbeat/MetricBeat_Installtion.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4008df8650850e88",
+    "type": "split",
+    "children": [
+      {
+        "id": "d97a3e211df3cf94",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3c21674613a5452e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "ba87c12b28453c69",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "3816675f52b1856a",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "426ba97b555ff766",
+    "type": "split",
+    "children": [
+      {
+        "id": "6a12c492df08cbce",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8bad3fb893f596db",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Beats_Configs/Metricbeat/MetricBeat_Installtion.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "73db665eb7300ee0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Beats_Configs/Metricbeat/MetricBeat_Installtion.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "520f7643b0be3acd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "1d0ed07e13a27519",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Beats_Configs/Metricbeat/MetricBeat_Installtion.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "9e2763ec25b4a4ab",
+  "lastOpenFiles": [
+    "Beats_Configs/Filebeat/Filebeat_Installation.md",
+    "Beats_Configs/Metricbeat/MetricBeat_Installtion.md",
+    "ElasticSearch 7.17.6 with Kibana Setup on RHEL 8.md",
+    "README.md",
+    "Setup of Elastic-Agent.md"
+  ]
+}
