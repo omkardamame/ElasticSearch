@@ -5,7 +5,12 @@
   metricsets:
     - node
     - node_stats
-  period: 05s
-  hosts: ["http://192.168.1.251:9200"]
+    - index
+    - shard
+  period: 01s
+  hosts: ["https://192.168.1.221:9200"]
   username: "elastic"
   password: "elastic"
+
+  ssl.certificate_authorities: ["/etc/elasticsearch/certs/http_ca.crt"]
+  xpack.enabled: true
